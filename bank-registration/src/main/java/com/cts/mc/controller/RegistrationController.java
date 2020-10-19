@@ -62,7 +62,7 @@ public class RegistrationController {
 	public @ResponseBody ResponseEntity<String> getCustomerById(@ApiParam(value = "Customer Id to Modify", required = true)@PathVariable(name = "Id") Integer id){	
 				
 			Optional<RegistrationEntity> entity = service.findByCustId(id);
-			if(!entity.isEmpty()) {	
+			if(!entity.isPresent()) {	
 				boolean  status = service.isLogin(entity.get().getUserName(),entity.get().getPassword());
 				if(!status) {
 					log.error(CUST_NOT_LOGIN);
@@ -84,7 +84,7 @@ public class RegistrationController {
 	@PathVariable(name = "Id") Integer id){	
 		
 		Optional<RegistrationEntity> entity = service.findByCustId(id);		
-		if(!entity.isEmpty()) {
+		if(!entity.isPresent()) {
 			boolean  status = service.isLogin(entity.get().getUserName(),entity.get().getPassword());
 			if(!status) {
 				log.error(CUST_NOT_LOGIN);
@@ -138,7 +138,7 @@ public class RegistrationController {
 			
 				Optional<RegistrationEntity> entity = service.findByCustId(request.getCustId());
 				boolean  status = service.isLogin(request.getUserName(), request.getPassword());
-				if(!entity.isEmpty()) {
+				if(!entity.isPresent()) {
 					if(!status) {
 						log.info(CUST_NOT_LOGIN);
 						return new ResponseEntity<>(CUST_NOT_LOGIN,HttpStatus.OK);					
