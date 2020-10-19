@@ -140,7 +140,7 @@ public class LoanApplyControllerTest {
 		
 		when(impl.findByLoanId(entity.getLoanId())).thenReturn(Optional.of(new LoanApplyEntity()));
 		ResponseEntity<?> responseEntity = controller.modifyLoanById(entity);		
-		assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);	
+		assertThat(responseEntity.getStatusCodeValue()).isEqualTo(404);	
 	}
 	@Test
 	public void modifyLoanByIdNtvTest(){	
@@ -153,6 +153,6 @@ public class LoanApplyControllerTest {
 		entity.setLoanId(12389);
 		when(impl.findByLoanId(entity.getLoanId())).thenReturn(Optional.empty());
 		ResponseEntity<?> responseEntity = controller.modifyLoanById(entity);		
-		assertThat(responseEntity.getStatusCodeValue()).isEqualTo(404);	
+		assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);	
 	}
 }
