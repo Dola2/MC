@@ -104,7 +104,8 @@ public class LoanApplyController {
 	public @ResponseBody ResponseEntity<String> modifyLoanById(@RequestBody LoanApplyModel request){	
 		
 			Optional<LoanApplyEntity> entity = impl.findByLoanId(request.getLoanId());
-			if(!entity.isEmpty()){
+			if(!entity.isPresent())
+			{
 				impl.update(request);
 				log.info("Loan Updated Successfully");
 				return new ResponseEntity<>("Loan Updated Successfully",HttpStatus.OK);	
