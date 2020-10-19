@@ -69,7 +69,7 @@ public class RegistrationControllerTest {
 		
 		ResponseEntity<?>  responseEntity =  controller.getCustomerById(registrationEntity.getCustId());
 		
-		assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
+		assertThat(responseEntity.getStatusCodeValue()).isEqualTo(404);
 		
 	}
 	@Test
@@ -83,7 +83,7 @@ public class RegistrationControllerTest {
 		
 		when(service.findByCustId(registrationEntity.getCustId())).thenReturn(Optional.of(registrationEntity));		
 		ResponseEntity<?> responseEntity = controller.deleteCustomerById(registrationEntity.getCustId());
-		assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
+		assertThat(responseEntity.getStatusCodeValue()).isEqualTo(404);
 		
 		
 	}
@@ -117,7 +117,7 @@ public class RegistrationControllerTest {
 		
 		when(service.findByCustId(registrationEntity.getCustId())).thenReturn(Optional.of(registrationEntity));		
 		ResponseEntity<?> responseEntity = controller.modifyAccountById(model);
-		assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
+		assertThat(responseEntity.getStatusCodeValue()).isEqualTo(404);
 		
 	}
 
