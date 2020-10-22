@@ -1,5 +1,4 @@
 package com.cts.mc.entity;
-
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
