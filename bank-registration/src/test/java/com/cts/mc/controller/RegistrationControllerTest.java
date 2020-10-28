@@ -69,7 +69,7 @@ public class RegistrationControllerTest {
 		
 		ResponseEntity<?>  responseEntity =  controller.getCustomerById(registrationEntity.getCustId());
 		
-		assertThat(responseEntity.getStatusCodeValue()).isEqualTo(404);
+		assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
 		
 	}
 	@Test
