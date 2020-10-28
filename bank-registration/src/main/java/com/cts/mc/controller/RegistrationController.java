@@ -85,7 +85,7 @@ public class RegistrationController {
 	@PathVariable(name = "Id") Integer id){	
 		
 		Optional<RegistrationEntity> entity = service.findByCustId(id);		
-		if(!entity.isPresent()) {
+		if(entity.isPresent()) {
 			boolean  status = service.isLogin(entity.get().getUserName(),entity.get().getPassword());
 			if(!status) {
 				log.error(CUST_NOT_LOGIN);

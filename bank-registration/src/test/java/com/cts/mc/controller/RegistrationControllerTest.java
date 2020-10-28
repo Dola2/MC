@@ -79,11 +79,10 @@ public class RegistrationControllerTest {
 		registrationEntity.setCustId(546);
 		registrationEntity.setAccountType("Saving");
 		registrationEntity.setAddress("Birati");
-		registrationEntity.setEmail("dd@gmail.com");
-		
+		registrationEntity.setEmail("dd@gmail.com");		
 		when(service.findByCustId(registrationEntity.getCustId())).thenReturn(Optional.of(registrationEntity));		
 		ResponseEntity<?> responseEntity = controller.deleteCustomerById(registrationEntity.getCustId());
-		assertThat(responseEntity.getStatusCodeValue()).isEqualTo(404);
+		assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
 		
 		
 	}
