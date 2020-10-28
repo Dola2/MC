@@ -47,7 +47,7 @@ public class LoanApplyController {
 		}
 		}catch(Exception e) {
 			log.error("Customer not Logged in", e);
-			return new ResponseEntity<>("LOGIN_DONE",HttpStatus.NOT_FOUND);		
+			return new ResponseEntity<>(LOGIN_DONE,HttpStatus.NOT_FOUND);		
 		}
 		return new ResponseEntity<>(LOGIN_DONE,HttpStatus.UNAUTHORIZED);	
 				

@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import com.azure.messaging.servicebus.ServiceBusClientBuilder;
 import com.azure.messaging.servicebus.ServiceBusMessage;
-import com.azure.messaging.servicebus.ServiceBusSenderAsyncClient;
 import com.azure.messaging.servicebus.ServiceBusSenderClient;
 import com.cts.mc.model.RegistrationModel;
 import com.google.gson.Gson;
@@ -18,11 +17,7 @@ public class MessageSenderToQueue {
 	//MessageReceiverFromQueue messageReceiverFromQueue;
 
 	public void run(RegistrationModel model)  {
-		// Create a QueueClient instance and then asynchronously send messages.
-		// Close the sender once the send operation is complete.
-		 //String connectionString="Endpoint=sb://ctsmcbussvc.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=nQcL/e/ugGdrM2vQfIm4eDdpl8O8TscKUM7+f9EaL1Y=";
 		
-		 //String queueName="ctsmcqueue";
 		String queueName="targetque";
 		
 		

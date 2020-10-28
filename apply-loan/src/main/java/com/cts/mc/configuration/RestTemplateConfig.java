@@ -36,9 +36,8 @@ public String getRestCall(Integer custId) {
 	HttpHeaders headers = new HttpHeaders();
 	headers.setContentType(MediaType.APPLICATION_JSON);
 	headers.setBasicAuth(config.getRegusername(), config.getRegpassword());
-    HttpEntity < Integer > entity = new HttpEntity < Integer > (custId, headers);
-    
-	    ResponseEntity < RegistrationModel > response = restTemplate.exchange(config.getCheckCustCredUrl(), HttpMethod.GET, entity,RegistrationModel.class,custId);
+    HttpEntity <Integer> entity = new HttpEntity < Integer > (custId, headers);
+	ResponseEntity < RegistrationModel > response = restTemplate.exchange(config.getCheckCustCredUrl(), HttpMethod.GET, entity,RegistrationModel.class,custId);
 	   
 	    RegistrationModel model = response.getBody();
 	    HttpEntity < String> loginEntity = new HttpEntity < String> (model.getUserName(), headers);

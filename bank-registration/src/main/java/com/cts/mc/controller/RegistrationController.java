@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cts.mc.entity.RegistrationEntity;
 import com.cts.mc.interfaces.RegistrationService;
 import com.cts.mc.model.RegistrationModel;
+import com.cts.mc.util.MessageSenderToQueue;
 import com.google.gson.Gson;
 
 import io.swagger.annotations.Api;
@@ -34,6 +35,8 @@ public class RegistrationController {
 	
 	@Autowired
 	private RegistrationService service ;
+	@Autowired
+	MessageSenderToQueue queue;
 	
 	@Autowired
 	private Gson gson;
@@ -109,6 +112,7 @@ public class RegistrationController {
 		boolean  status = service.checkUserName(payLoad.getUserName());	
 		
 		if(!status)	{
+			queue.run(payLoad);
 			service.create(payLoad);
 			log.info("Customer Registration Done");
 			msg="Customer Registration Done";
@@ -137,8 +141,9 @@ public class RegistrationController {
 	public @ResponseBody ResponseEntity<String> modifyAccountById(@RequestBody RegistrationModel request){			
 			
 				Optional<RegistrationEntity> entity = service.findByCustId(request.getCustId());
-				boolean  status = service.isLogin(request.getUserName(), request.getPassword());
-				if(!entity.isPresent()) {
+				
+				if(entity.isPresent()) {
+					boolean  status = service.isLogin(request.getUserName(), request.getPassword());
 					if(!status) {
 						log.info(CUST_NOT_LOGIN);
 						return new ResponseEntity<>(CUST_NOT_LOGIN,HttpStatus.OK);					

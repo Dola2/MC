@@ -22,7 +22,8 @@ import com.cts.mc.service.CustomAuthenticationEntryPoint;
 	 private PasswordEncoder encoder =  PasswordEncoderFactories.createDelegatingPasswordEncoder();  
   @Autowired 
   public void configureGlobal(AuthenticationManagerBuilder auth) throws  Exception 
-  { auth.inMemoryAuthentication().withUser(config.getUsername())
+  {  
+	  auth.inMemoryAuthentication().withUser(config.getUsername())
 	  .password(encoder.encode(config.getPassword())).roles(config.getRole());
   }
   
@@ -38,9 +39,9 @@ import com.cts.mc.service.CustomAuthenticationEntryPoint;
 
 @Override
   protected void configure(HttpSecurity http) throws Exception {
-	  http 
-	 .authorizeRequests()
-	 .antMatchers("/cts/mc/loan/**").hasRole(config.getRole()).and()
+	  http.csrf().disable() 
+	 .authorizeRequests().anyRequest().authenticated()
+	 .and()
 	 .httpBasic().authenticationEntryPoint(new CustomAuthenticationEntryPoint());
 
 	  

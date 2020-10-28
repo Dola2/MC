@@ -73,6 +73,22 @@ public class RegistrationControllerTest {
 		
 	}
 	@Test
+	public void getCustomerByIdNgTest(){	
+		
+		RegistrationEntity registrationEntity = new RegistrationEntity();
+		registrationEntity.setCustId(546);
+		registrationEntity.setAccountType("Saving");
+		registrationEntity.setAddress("Birati");
+		registrationEntity.setEmail("dd@gmail.com");
+		
+		when(service.findByCustId(registrationEntity.getCustId())).thenReturn(Optional.empty());
+		
+		ResponseEntity<?>  responseEntity =  controller.getCustomerById(registrationEntity.getCustId());
+		
+		assertThat(responseEntity.getStatusCodeValue()).isEqualTo(404);
+		
+	}
+	@Test
 	public void deleteCustomerByIdTest() 
 	{	
 		RegistrationEntity registrationEntity = new RegistrationEntity();
@@ -83,6 +99,20 @@ public class RegistrationControllerTest {
 		when(service.findByCustId(registrationEntity.getCustId())).thenReturn(Optional.of(registrationEntity));		
 		ResponseEntity<?> responseEntity = controller.deleteCustomerById(registrationEntity.getCustId());
 		assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
+		
+		
+	}
+	@Test
+	public void deleteCustomerByIdTestNg() 
+	{	
+		RegistrationEntity registrationEntity = new RegistrationEntity();
+		registrationEntity.setCustId(546);
+		registrationEntity.setAccountType("Saving");
+		registrationEntity.setAddress("Birati");
+		registrationEntity.setEmail("dd@gmail.com");		
+		when(service.findByCustId(registrationEntity.getCustId())).thenReturn(Optional.empty());		
+		ResponseEntity<?> responseEntity = controller.deleteCustomerById(registrationEntity.getCustId());
+		assertThat(responseEntity.getStatusCodeValue()).isEqualTo(404);
 		
 		
 	}
@@ -115,6 +145,26 @@ public class RegistrationControllerTest {
 		model.setEmail("dd@gmail123.com");
 		
 		when(service.findByCustId(registrationEntity.getCustId())).thenReturn(Optional.of(registrationEntity));		
+		ResponseEntity<?> responseEntity = controller.modifyAccountById(model);
+		assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
+		
+	}
+	@Test	
+	public void modifyAccountNgTest(){			
+			
+		RegistrationEntity registrationEntity = new RegistrationEntity();
+		registrationEntity.setCustId(546);
+		registrationEntity.setAccountType("Saving");
+		registrationEntity.setAddress("Birati");
+		registrationEntity.setEmail("dd@gmail.com");
+		
+		RegistrationModel model = new RegistrationModel()  ;
+		model.setCustId(546);
+		model.setAccountType("Credit");
+		model.setAddress("Birati123");
+		model.setEmail("dd@gmail123.com");
+		
+		when(service.findByCustId(registrationEntity.getCustId())).thenReturn(Optional.empty());		
 		ResponseEntity<?> responseEntity = controller.modifyAccountById(model);
 		assertThat(responseEntity.getStatusCodeValue()).isEqualTo(404);
 		

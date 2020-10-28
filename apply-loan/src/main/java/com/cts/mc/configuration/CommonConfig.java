@@ -26,7 +26,7 @@ public class CommonConfig {
 	private String role;
 	
 	@Value("${registartion.basic.auth.password}")
-	private String regusername;
-	@Value("${registartion.basic.auth.username}")
 	private String regpassword;
+	@Value("${registartion.basic.auth.username}")	
+	private String regusername;
 }
