@@ -112,7 +112,7 @@ public class RegistrationController {
 		boolean  status = service.checkUserName(payLoad.getUserName());	
 		
 		if(!status)	{
-			queue.run(payLoad);
+			
 			service.create(payLoad);
 			log.info("Customer Registration Done");
 			msg="Customer Registration Done";
