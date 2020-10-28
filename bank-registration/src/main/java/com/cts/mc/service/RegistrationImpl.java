@@ -64,7 +64,7 @@ public class RegistrationImpl implements RegistrationService{
 
 	@Override
     public String login(String username, String password) {
-        Optional<RegistrationEntity> entity = repo.login(username,password);
+        Optional<RegistrationEntity> entity = repo.findByUserNameAndPassword(username,password);
         if(entity.isPresent()){
             String token = UUID.randomUUID().toString();           
             entity.get().setToken(token);
@@ -103,7 +103,7 @@ public class RegistrationImpl implements RegistrationService{
 
 	@Override
 	public Boolean isLogin(String username, String password) {
-		 Optional<RegistrationEntity> entity = repo.login(username,password);
+		 Optional<RegistrationEntity> entity = repo.checkUserName(username);
 		 Boolean status = false;
 		 if(entity.isPresent() && entity.get().getIslogin().equals("Y")){ 
 			 status = true;

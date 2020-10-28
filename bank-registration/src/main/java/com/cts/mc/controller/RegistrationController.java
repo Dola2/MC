@@ -41,6 +41,7 @@ public class RegistrationController {
 	private static final  String   CUST_NOTFOUND = "Customer Not Found";
 	private  static final  String  CUST_LOG_OFF = "Customer Logged Off";
 	private static final  String  CUST_NOT_LOGIN = "Customer not Logged in";
+	private static final  String  CUST_LOGIN = "Customer  Logged in";
 	
 	
 	@ApiOperation(value = "List All Customer")
@@ -62,7 +63,7 @@ public class RegistrationController {
 	public @ResponseBody ResponseEntity<String> getCustomerById(@ApiParam(value = "Customer Id to Modify", required = true)@PathVariable(name = "Id") Integer id){	
 				
 			Optional<RegistrationEntity> entity = service.findByCustId(id);
-			if(!entity.isPresent()) {	
+			if(entity.isPresent()) {	
 				boolean  status = service.isLogin(entity.get().getUserName(),entity.get().getPassword());
 				if(!status) {
 					log.error(CUST_NOT_LOGIN);
@@ -120,11 +121,10 @@ public class RegistrationController {
 	public @ResponseBody ResponseEntity<String> loginCustomer(@ApiParam(value = "Customer UserName")@PathVariable(name = "usernm") String userNm,
 			@ApiParam(value = "Customer Password")@PathVariable(name = "passwrd") String password) {
 		boolean  status = service.isLogin(userNm, password);
-		
 		if(!status) {
 			service.login(userNm, password);
-			log.info(CUST_NOT_LOGIN);
-			return new ResponseEntity<>(CUST_NOT_LOGIN,HttpStatus.OK);		
+			log.info(CUST_LOGIN);
+			return new ResponseEntity<>(CUST_LOGIN,HttpStatus.OK);		
 		}
 		else {
 			log.info("Customer not Registerred");

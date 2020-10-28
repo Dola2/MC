@@ -13,9 +13,9 @@ import com.cts.mc.entity.RegistrationEntity;
 public interface RegistrationRepository extends CrudRepository<RegistrationEntity,Integer> {
 
 	@Query("select r from RegistrationEntity r where r.userName =:userName")
-	public Optional<RegistrationEntity> checkUserName(@Param("userName") String userName);
-	@Query("select r from RegistrationEntity r where r.userName=:userName  and r.password=:password")
-	public Optional<RegistrationEntity> login(@Param("userName")String userName,@Param("password")String password);
+	public Optional<RegistrationEntity> checkUserName(@Param("userName") String userName);	
 	public Optional<RegistrationEntity> findByToken(String token);
+	public Optional<RegistrationEntity> findByUserNameAndPassword(String userName,String password);
+		
 	
 }
