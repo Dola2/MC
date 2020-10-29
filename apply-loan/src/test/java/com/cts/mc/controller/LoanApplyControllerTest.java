@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
 import com.cts.mc.entity.LoanApplyEntity;
+import com.cts.mc.exception.LoanNotFoundException;
 import com.cts.mc.interfaces.LoanApplyService;
 import com.cts.mc.model.LoanApplyModel;
 
@@ -55,8 +56,8 @@ public class LoanApplyControllerTest {
 		assertThat(responseEntity.getStatusCodeValue()).isEqualTo(401);
 		
 	}
-	@Test
-	public void getLoansPositiveTest(){	
+	@Test()
+	public void getLoansPositiveTest() throws LoanNotFoundException{	
 		LoanApplyEntity entity = new LoanApplyEntity();
 		entity.setCustId(123);
 		entity.setLoanAmount(new BigDecimal(123445.00));
@@ -81,7 +82,7 @@ public class LoanApplyControllerTest {
 	}
 	
 	@Test
-	public void getLoansNegetiveTest(){			
+	public void getLoansNegetiveTest() throws LoanNotFoundException{			
 		List<LoanApplyEntity> loanList = new ArrayList<LoanApplyEntity>();		
 		when(impl.findAll()).thenReturn(loanList);		
 		ResponseEntity<List<LoanApplyEntity>> responseEntity = controller.getLoans();
@@ -90,7 +91,7 @@ public class LoanApplyControllerTest {
 	}
 	
 	@Test
-	public void getLoanByIdPstvTest(){	
+	public void getLoanByIdPstvTest() throws LoanNotFoundException{	
 		int id = 123;
 		LoanApplyEntity entity = new LoanApplyEntity();
 		entity.setLoanAmount(new BigDecimal(1234.00));
@@ -102,7 +103,7 @@ public class LoanApplyControllerTest {
 		assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
 	}
 	@Test
-	public void getLoanByIdNgTest(){	
+	public void getLoanByIdNgTest() throws LoanNotFoundException{	
 		int id = 123;				
 		when(impl.findByLoanId(id)).thenReturn(Optional.empty());		
 		ResponseEntity<LoanApplyEntity> responseEntity = controller.getLoanById(id);
@@ -110,7 +111,7 @@ public class LoanApplyControllerTest {
 	}
 	
 	@Test
-	public  void deleteLoanByIdPtvTest(){
+	public  void deleteLoanByIdPtvTest() throws LoanNotFoundException{
 		int id = 123;
 		LoanApplyEntity entity = new LoanApplyEntity();
 		entity.setLoanAmount(new BigDecimal(1234.00));
@@ -122,7 +123,7 @@ public class LoanApplyControllerTest {
 		assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
 	}
 	@Test
-	public  void deleteLoanByIdNtvTest(){
+	public  void deleteLoanByIdNtvTest() throws LoanNotFoundException{
 		int id = 123;				
 		when(impl.findByLoanId(id)).thenReturn(Optional.empty());	
 		ResponseEntity<?> responseEntity = controller.deleteLoanById(id);		

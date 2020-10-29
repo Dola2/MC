@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cts.mc.entity.LoanApplyEntity;
+import com.cts.mc.exception.LoanNotFoundException;
 import com.cts.mc.interfaces.LoanApplyService;
 import com.cts.mc.model.LoanApplyModel;
 
@@ -55,12 +56,12 @@ public class LoanApplyController {
 	}
 	
 	@GetMapping(value = "getLoan",produces =  "application/json")
-	public @ResponseBody ResponseEntity<List<LoanApplyEntity>> getLoans(){	
+	public @ResponseBody ResponseEntity<List<LoanApplyEntity>> getLoans() throws LoanNotFoundException{	
 		
 		List<LoanApplyEntity> loanList = impl.findAll();		
 		if(loanList.isEmpty()) {
 			log.info(LOAN_NOT_FOUND);
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			throw new LoanNotFoundException();
 		}else {
 			return new ResponseEntity<>(loanList,HttpStatus.OK);
 		}
@@ -68,7 +69,7 @@ public class LoanApplyController {
 	}
 	
 	@GetMapping(value = "getLoan/{loanId}",produces =  "application/json")
-	public @ResponseBody ResponseEntity<LoanApplyEntity> getLoanById(@PathVariable(name = "loanId") Integer id){		
+	public @ResponseBody ResponseEntity<LoanApplyEntity> getLoanById(@PathVariable(name = "loanId") Integer id) throws LoanNotFoundException{		
 			
 				Optional<LoanApplyEntity> entity = impl.findByLoanId(id);
 				if(entity.isPresent()) {
@@ -77,13 +78,13 @@ public class LoanApplyController {
 				}	
 				else {
 					log.info(LOAN_NOT_FOUND);
-					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+					throw new LoanNotFoundException();
 				}
 		
 	}
 	
 	@DeleteMapping(value = "deleteLoan/{id}")	
-	public @ResponseBody ResponseEntity<String> deleteLoanById(@PathVariable(name = "id") Integer id){	
+	public @ResponseBody ResponseEntity<String> deleteLoanById(@PathVariable(name = "id") Integer id) throws LoanNotFoundException{	
 		
 				Optional<LoanApplyEntity> entity = impl.findByLoanId(id);
 				if(entity.isPresent()) {
@@ -93,7 +94,7 @@ public class LoanApplyController {
 				}	
 				else {
 					log.info(LOAN_NOT_FOUND);
-					return new ResponseEntity<>(LOAN_NOT_FOUND,HttpStatus.NOT_FOUND);
+					throw new LoanNotFoundException();
 				}
 					
 					

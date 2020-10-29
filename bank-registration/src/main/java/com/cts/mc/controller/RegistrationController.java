@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cts.mc.entity.RegistrationEntity;
+import com.cts.mc.exception.CustomerNotFoundException;
+import com.cts.mc.exception.CustomerNotLoggedInException;
 import com.cts.mc.interfaces.RegistrationService;
 import com.cts.mc.model.RegistrationModel;
 import com.cts.mc.util.MessageSenderToQueue;
@@ -49,7 +51,7 @@ public class RegistrationController {
 	
 	@ApiOperation(value = "List All Customer")
 	@GetMapping(value = "getCustomer",produces =  "application/json")
-	public @ResponseBody ResponseEntity<List<RegistrationEntity>> getCustomers(){	
+	public @ResponseBody ResponseEntity<List<RegistrationEntity>> getCustomers() throws CustomerNotFoundException{	
 		
 		List<RegistrationEntity> entity = service.findAll();
 		if(null!=entity) {
@@ -58,41 +60,40 @@ public class RegistrationController {
 		}	
 		else {
 		log.error(CUST_NOTFOUND, HttpStatus.NOT_FOUND);	
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);	
+		throw new CustomerNotFoundException();	
 		}
 	}
 	@ApiOperation(value = "Show One Customer")
 	@GetMapping(value = "getCustomer/{Id}",produces =  "application/json")
-	public @ResponseBody ResponseEntity<String> getCustomerById(@ApiParam(value = "Customer Id to Modify", required = true)@PathVariable(name = "Id") Integer id){	
+	public @ResponseBody ResponseEntity<String> getCustomerById(@ApiParam(value = "Customer Id to Modify", required = true)@PathVariable(name = "Id") Integer id) throws CustomerNotFoundException, CustomerNotLoggedInException{	
 				
 			Optional<RegistrationEntity> entity = service.findByCustId(id);
 			if(entity.isPresent()) {	
 				boolean  status = service.isLogin(entity.get().getUserName(),entity.get().getPassword());
 				if(!status) {
-					log.error(CUST_NOT_LOGIN);
-					return new ResponseEntity<>(CUST_NOT_LOGIN,HttpStatus.OK);
+					throw new CustomerNotLoggedInException();
 				
 				}else {
 					
 					return new ResponseEntity<>(gson.toJson(entity.get()),HttpStatus.OK);
 				}
 			}else {
-				log.error(CUST_NOTFOUND);	
-				return new ResponseEntity<>("Customer Not Found.Do Registration",HttpStatus.NOT_FOUND);
+				log.error(CUST_NOTFOUND);
+				throw new CustomerNotFoundException();
 			}
 			
 	}
 	@ApiOperation(value = "Delete One Customer")
 	@DeleteMapping(value = "deleteCustomer/{Id}",produces =  "application/json")
 	public @ResponseBody ResponseEntity<String> deleteCustomerById(@ApiParam(value = "Customer Id to Delete", required = true) 
-	@PathVariable(name = "Id") Integer id){	
+	@PathVariable(name = "Id") Integer id) throws CustomerNotFoundException, CustomerNotLoggedInException{	
 		
 		Optional<RegistrationEntity> entity = service.findByCustId(id);		
 		if(entity.isPresent()) {
 			boolean  status = service.isLogin(entity.get().getUserName(),entity.get().getPassword());
 			if(!status) {
 				log.error(CUST_NOT_LOGIN);
-				return new ResponseEntity<>(CUST_NOT_LOGIN,HttpStatus.OK);
+				throw new CustomerNotLoggedInException();
 			
 			}else {
 			service.delete(entity.get());
@@ -102,7 +103,7 @@ public class RegistrationController {
 		}
 		else {
 			log.error(CUST_NOTFOUND, HttpStatus.NOT_FOUND);	
-			return new ResponseEntity<>("Customer Not Found.Do Registration",HttpStatus.NOT_FOUND);
+			throw new CustomerNotFoundException();
 		}
 	}
 	@ApiOperation(value = "Register Customer")
@@ -123,7 +124,7 @@ public class RegistrationController {
 	@ApiOperation(value = "Login Customer")
 	@GetMapping(value = "login/{usernm}/{passwrd}",consumes = "application/json")
 	public @ResponseBody ResponseEntity<String> loginCustomer(@ApiParam(value = "Customer UserName")@PathVariable(name = "usernm") String userNm,
-			@ApiParam(value = "Customer Password")@PathVariable(name = "passwrd") String password) {
+			@ApiParam(value = "Customer Password")@PathVariable(name = "passwrd") String password) throws CustomerNotFoundException {
 		boolean  status = service.isLogin(userNm, password);
 		if(!status) {
 			service.login(userNm, password);
@@ -132,13 +133,13 @@ public class RegistrationController {
 		}
 		else {
 			log.info("Customer not Registerred");
-			return new ResponseEntity<>("Customer not Registerred",HttpStatus.OK);
+			throw new CustomerNotFoundException();
 		}
 		
 	}
 	@ApiOperation(value = "Update Customer")
 	@PutMapping(value = "updateAccount",consumes = "application/json")	
-	public @ResponseBody ResponseEntity<String> modifyAccountById(@RequestBody RegistrationModel request){			
+	public @ResponseBody ResponseEntity<String> modifyAccountById(@RequestBody RegistrationModel request) throws CustomerNotLoggedInException, CustomerNotFoundException{			
 			
 				Optional<RegistrationEntity> entity = service.findByCustId(request.getCustId());
 				
@@ -146,7 +147,7 @@ public class RegistrationController {
 					boolean  status = service.isLogin(request.getUserName(), request.getPassword());
 					if(!status) {
 						log.info(CUST_NOT_LOGIN);
-						return new ResponseEntity<>(CUST_NOT_LOGIN,HttpStatus.OK);					
+						throw new CustomerNotLoggedInException();				
 					}else {
 						service.update(entity.get(),request);
 						log.info("Account Updated Successfully");
@@ -155,13 +156,13 @@ public class RegistrationController {
 				
 				}else {
 					log.info(CUST_NOTFOUND);
-					return new ResponseEntity<>(CUST_NOTFOUND,HttpStatus.NOT_FOUND);
+					throw new CustomerNotFoundException();
 				}
 			
 	}
 	@ApiOperation(value = "Log of Customer")
 	@GetMapping(value = "logoff/{usernm}")
-	public @ResponseBody ResponseEntity<String> logOffCustomer(@ApiParam(value = "Customer UserName")@PathVariable(name = "usernm") String userNm) {
+	public @ResponseBody ResponseEntity<String> logOffCustomer(@ApiParam(value = "Customer UserName")@PathVariable(name = "usernm") String userNm) throws CustomerNotFoundException {
 		boolean  status = service.logOff(userNm);
 		
 		if(status) {
@@ -171,7 +172,7 @@ public class RegistrationController {
 		}
 		else {
 			log.info(CUST_NOTFOUND);
-			return new ResponseEntity<>(CUST_NOTFOUND,HttpStatus.NOT_FOUND);
+			throw new CustomerNotFoundException();
 		}
 		
 	}
